@@ -1,5 +1,5 @@
 # .goreleaser.yml
-project_name: tmcp
+project_name: amg
 version: 2
 builds:
   - env:

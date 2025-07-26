@@ -1,4 +1,4 @@
-module github.com/sandwichlabs/mcp-task-bridge
+module github.com/sandwichlabs/agent-memory-graph
 
 go 1.24.4
 

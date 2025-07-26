@@ -4,29 +4,27 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/sandwichlabs/mcp-task-bridge/internal/server"
+	"github.com/sandwichlabs/agent-memory-graph/internal/server"
 	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "tmcp [Taskfile]",
-	Short: "A CLI to bridge Taskfiles with MCP.",
-	Long:  `tmcp is a command-line tool that evaluates a Taskfile and exposes its tasks as MCP functions.`,
+	Use:   "amg [Path to Memory Graph Directory]",
+	Short: "A CLI to extend MCP with graph data.",
+	Long:  `amg is a command-line tool that exposes memory management and knowledge retrieval functions for MCP.`,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		servername, _ := cmd.Flags().GetString("name")
 		if servername == "" {
-			servername = "tasks"
+			servername = "knowledge"
 		}
-		taskBinPath, _ := cmd.Flags().GetString("task-bin")
 
-		server.Run(args[0], taskBinPath, servername)
+		server.Run(args[0], servername)
 	},
 }
 
 func init() {
 	rootCmd.Flags().String("name", "", "Name of the MCP server (default: 'tasks')")
-	rootCmd.Flags().String("task-bin", "task", "Path to the task binary (default: 'task')")
 }
 
 func Execute() {

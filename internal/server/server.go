@@ -9,67 +9,11 @@ import (
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
-	"github.com/sandwichlabs/mcp-task-bridge/internal/inspector"
 )
 
-var taskBin = "task"
-
-func TranslateTtmcpTools(config *inspector.MCPConfig) []*mcp.Tool {
-	var tools []*mcp.Tool
-	for _, task := range config.Tasks {
-		var toolOptions []mcp.ToolOption
-		toolOptions = append(toolOptions, mcp.WithDescription(task.Description))
-		for _, param := range task.Parameters {
-			toolOptions = append(toolOptions, mcp.WithString(param.Name, mcp.Required()))
-		}
-		tool := mcp.NewTool(task.Name, toolOptions...)
-		tools = append(tools, &tool) // Take address of tool
-	}
-	return tools
-}
-
-func createTaskHandler(taskfilePath string) server.ToolHandlerFunc {
-	return func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		var args []string
-		args = append(args, "--taskfile", taskfilePath, request.Params.Name)
-		for key, value := range request.GetArguments() {
-			args = append(args, fmt.Sprintf("%s=%s", key, value))
-		}
-		cmd := exec.Command(taskBin, args...)
-		var out bytes.Buffer
-		cmd.Stdout = &out
-		var stderr bytes.Buffer
-		cmd.Stderr = &stderr
-
-		err := cmd.Run()
-		if err != nil {
-			return mcp.NewToolResultError(stderr.String()), nil
-		}
-
-		return mcp.NewToolResultText(out.String()), nil
-	}
-}
-
-func Run(taskfilePath string, taskBinPath string, serverName string) {
-	if taskBinPath != "" {
-		taskBin = taskBinPath
-	}
-
-	inspector, err := inspector.New(
-		inspector.WithTaskfile(taskfilePath),
-		inspector.WithTaskBin(taskBinPath),
-	)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error creating inspector: %v\n", err)
-		return
-	}
-	config, err := inspector.Inspect()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error inspecting Taskfile: %v\n", err)
-		return
-	}
-
-
+func Run(memoryPath string, serverName string) {
+	// Initialize the MCP server with the provided memory path and server name
+	// Create a new MCP server instance
 	hooks := &server.Hooks{}
 
 	hooks.AddBeforeAny(func(ctx context.Context, id any, method mcp.MCPMethod, message any) {
@@ -98,9 +42,10 @@ func Run(taskfilePath string, taskBinPath string, serverName string) {
 	hooks.AddBeforeCallTool(func(ctx context.Context, id any, message *mcp.CallToolRequest) {
 		fmt.Fprintf(os.Stderr, "beforeCallTool: %v, %v\n", id, message)
 	})
-
-	tools := TranslateTtmcpTools(config)
-	handler := createTaskHandler(taskfilePath)
+	// Define the task handler
+	// Define the tools
+	tools := 
+	handler := createTaskHandler(memoryPath)
 
 	s := server.NewMCPServer(serverName, "1.0.0",
 		server.WithToolCapabilities(true),

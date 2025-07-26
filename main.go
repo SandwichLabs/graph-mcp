@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/sandwichlabs/mcp-task-bridge/cmd"
+	"github.com/sandwichlabs/agent-memory-graph/cmd"
 )
 
 func main() {
