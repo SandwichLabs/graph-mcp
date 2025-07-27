@@ -12,8 +12,11 @@ var rootCmd = &cobra.Command{
 	Use:   "amg [Path to Memory Graph Directory]",
 	Short: "A CLI to extend MCP with graph data.",
 	Long:  `amg is a command-line tool that exposes memory management and knowledge retrieval functions for MCP.`,
-	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			cmd.Help()
+			return
+		}
 		servername, _ := cmd.Flags().GetString("name")
 		if servername == "" {
 			servername = "knowledge"
