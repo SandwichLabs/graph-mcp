@@ -1,11 +1,9 @@
 package server
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"os"
-	"os/exec"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -44,20 +42,20 @@ func Run(memoryPath string, serverName string) {
 	})
 	// Define the task handler
 	// Define the tools
-	tools := 
-	handler := createTaskHandler(memoryPath)
+	// tools :=
+	// handler := createTaskHandler(memoryPath)
 
-	s := server.NewMCPServer(serverName, "1.0.0",
-		server.WithToolCapabilities(true),
-		server.WithLogging(),
-		server.WithHooks(hooks),
-	)
-	for _, tool := range tools {
-		s.AddTool(*tool, handler) // Dereference tool
-	}
+	// s := server.NewMCPServer(serverName, "1.0.0",
+	// 	server.WithToolCapabilities(true),
+	// 	server.WithLogging(),
+	// 	server.WithHooks(hooks),
+	// )
+	// for _, tool := range tools {
+	// 	s.AddTool(*tool, handler) // Dereference tool
+	// }
 
-	err = server.ServeStdio(s)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error serving MCP: %v\n", err)
-	}
+	// err := server.ServeStdio(s)
+	// if err != nil {
+	// 	fmt.Fprintf(os.Stderr, "Error serving MCP: %v\n", err)
+	// }
 }
